@@ -15,8 +15,10 @@ const metres_per_px = 384400000 / 60; // pixels
 const time_multiplier = 10;
 
 const App = () => {
-    const [objects, setObjects] = useState(
-        [
+    const [state, setState] = useState({
+        x_offset: 0,
+        y_offset: 0,
+        objects: [
             {
                 x: centerX - 60,
                 y: centerY,
@@ -30,14 +32,22 @@ const App = () => {
                 velocity: [0, 0.0 * time_multiplier],
             }
         ]
-    );
+    });
 
     const updateHandler = ({ touches, screen, layout, time }) => {
-        let new_objects = objects.map(object => {
+        let move = touches.find(x => x.type === "move");
+        let x_offset = 0;
+        let y_offset = 0;
+        if (move) {
+            x_offset = move.delta.pageX,
+            y_offset = move.delta.pageY;
+        }
+
+        let new_objects = state.objects.map(object => {
             x = object.x;
             y = object.y;
             velocity = object.velocity;
-            for (object2 of objects) {
+            for (object2 of state.objects) {
                 if (object2 !== object) {
                     let distance = Math.sqrt((object2.x-object.x) ** 2 + (object2.y-object.y) ** 2);
                     let direction = Math.atan2(object.x - object2.x, object.y - object2.y);
@@ -50,13 +60,17 @@ const App = () => {
                 }
             }
             return {
-                x: object.x + velocity[0],
-                y: object.y + velocity[1],
+                x: x_offset + object.x + velocity[0],
+                y: y_offset + object.y + velocity[1],
                 velocity: velocity,
                 mass: object.mass
             };
         });
-        setObjects(new_objects);
+        setState({
+            x_offset: x_offset,
+            y_offset: y_offset,
+            objects: new_objects,
+        });
     };
 
     return (
@@ -64,14 +78,14 @@ const App = () => {
             <SafeAreaView>
                 <Text></Text>
                 <Text></Text>
-                <Text>The Distance between the planets is: {Math.round(Math.sqrt((objects[0].x-objects[1].x) ** 2 + (objects[0].y-objects[1].y) ** 2))}</Text>
-                <Text>velocity0: {objects[0].velocity}</Text>
-                <Text>velocity1: {objects[1].velocity}</Text>
+                <Text>The Distance between the planets is: {Math.round(Math.sqrt((state.objects[0].x-state.objects[1].x) ** 2 + (state.objects[0].y-state.objects[1].y) ** 2))}</Text>
+                <Text>velocity0: {state.objects[0].velocity}</Text>
+                <Text>velocity1: {state.objects[1].velocity}</Text>
             </SafeAreaView>
 
-            <View style={[styles.player, { left: objects[1].x, top: objects[1].y, backgroundColor: "green" }]} />
+            <View style={[styles.player, { left: state.objects[1].x, top: state.objects[1].y, backgroundColor: "green" }]} />
 
-            <View style={[styles.player, { left: objects[0].x, top: objects[0].y, backgroundColor: "pink" }]} />
+            <View style={[styles.player, { left: state.objects[0].x, top: state.objects[0].y, backgroundColor: "pink" }]} />
         </GameLoop>
     );
 };
