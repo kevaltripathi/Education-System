@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {Button, StyleSheet, Dimensions, View, Text, SafeAreaView} from "react-native";
 import {Icon} from "react-native-elements";
-import { GameLoop } from "react-native-game-engine";
+import {GameLoop} from "react-native-game-engine";
+import {Planet} from "../components/Planet";
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 const RADIUS = 25;
@@ -11,9 +12,12 @@ const centerY = HEIGHT / 2 - RADIUS;
 
 const G = 6.67e-11;
 let centerMass = 5.9e24;
-const metres_per_px = 384400000 / 60; // pixels
+const metres_per_px = 384400000 / 60;
 
 const initial_time_multiplier = 10;
+
+const EARTH_RADIUS = 6357000 / metres_per_px * 10;
+const MOON_RADIUS = 1737000 / metres_per_px * 10; // multiplying by 10 so you can actually see them. this is not to scale.
 
 const Simulation = () => {
     const [state, setState] = useState({
@@ -87,7 +91,7 @@ const Simulation = () => {
         });
     };
 
-    const changeSpeed = ( new_speed ) => {
+    const changeSpeed = (new_speed) => {
         setState({
             x_offset: state.x_offset,
             y_offset: state.y_offset,
@@ -111,9 +115,8 @@ const Simulation = () => {
                 <Text>velocity1: {state.objects[1].velocity}</Text>
             </SafeAreaView>
 
-            <View style={[styles.player, { left: state.objects[1].x, top: state.objects[1].y, backgroundColor: "green" }]} />
-
-            <View style={[styles.player, { left: state.objects[0].x, top: state.objects[0].y, backgroundColor: "pink" }]} />
+            <Planet x={state.objects[1].x} y={state.objects[1].y} backgroundColor="green" radius={EARTH_RADIUS} />
+            <Planet x={state.objects[0].x} y={state.objects[0].y} backgroundColor="pink" radius={MOON_RADIUS} />
 
             <SafeAreaView style={styles.bottom}>
                 <Icon style={styles.bottomIcon} name="play-arrow" onPress={() => {state.paused = !state.paused}} />
