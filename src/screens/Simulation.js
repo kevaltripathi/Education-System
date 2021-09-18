@@ -46,41 +46,38 @@ const Simulation = () => {
             y_offset = move.delta.pageY;
         }
 
-
-        let new_objects = state.objects;
-
-            new_objects = state.objects.map(object => {
-                x = object.x;
-                y = object.y;
-                velocity = object.velocity;
-                if (!state.paused) {
-                    for (object2 of state.objects) {
-                        if (object2 !== object) {
-                            let distance = Math.sqrt((object2.x-object.x) ** 2 + (object2.y-object.y) ** 2);
-                            let direction = Math.atan2(object.x - object2.x, object.y - object2.y);
-                            let force = -G * object.mass * object2.mass / (distance * metres_per_px) ** 2;
-                            let accel = force / object.mass * state.time_multiplier ** 2;
-                            velocity = [
-                                velocity[0] + accel * Math.sin(direction),
-                                velocity[1] + accel * Math.cos(direction),
-                            ];
-                        }
+        new_objects = state.objects.map(object => {
+            x = object.x;
+            y = object.y;
+            velocity = object.velocity;
+            if (!state.paused) {
+                for (object2 of state.objects) {
+                    if (object2 !== object) {
+                        let distance = Math.sqrt((object2.x-object.x) ** 2 + (object2.y-object.y) ** 2);
+                        let direction = Math.atan2(object.x - object2.x, object.y - object2.y);
+                        let force = -G * object.mass * object2.mass / (distance * metres_per_px) ** 2;
+                        let accel = force / object.mass * state.time_multiplier ** 2;
+                        velocity = [
+                            velocity[0] + accel * Math.sin(direction),
+                            velocity[1] + accel * Math.cos(direction),
+                        ];
                     }
-                    return {
-                        x: x_offset + object.x + velocity[0],
-                        y: y_offset + object.y + velocity[1],
-                        velocity: velocity,
-                        mass: object.mass
-                    };
-                } else {
-                    return {
-                        x: x_offset + object.x,
-                        y: y_offset + object.y,
-                        velocity: velocity,
-                        mass: object.mass
-                    };
                 }
-            });
+                return {
+                    x: x_offset + object.x + velocity[0],
+                    y: y_offset + object.y + velocity[1],
+                    velocity: velocity,
+                    mass: object.mass
+                };
+            } else {
+                return {
+                    x: x_offset + object.x,
+                    y: y_offset + object.y,
+                    velocity: velocity,
+                    mass: object.mass
+                };
+            }
+        });
         setState({
             x_offset: x_offset,
             y_offset: y_offset,
