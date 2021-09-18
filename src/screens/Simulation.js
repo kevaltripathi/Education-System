@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     bottomText: {
         marginLeft: 15,
         marginRight: 15,
+        fontFamily: 'Actor'
     },
     vline: {
         width: 1,

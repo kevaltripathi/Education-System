@@ -9,7 +9,7 @@ const Drawer = createDrawerNavigator();
 export const RootNavigator = () => (
     <NavigationContainer>
         <Drawer.Navigator>
-            <Drawer.Screen name="Blank" component={Blank}/>
+            <Drawer.Screen name="Home" component={Blank}/>
             <Drawer.Screen name="Simulation" component={Simulation}/>
         </Drawer.Navigator>
     </NavigationContainer>
