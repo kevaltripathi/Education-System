@@ -108,8 +108,6 @@ const Simulation = () => {
     return (
         <GameLoop style={styles.container} onUpdate={updateHandler}>
             <SafeAreaView>
-                <Text></Text>
-                <Text></Text>
                 <Text>The Distance between the planets is: {Math.round(Math.sqrt((state.objects[0].x-state.objects[1].x) ** 2 + (state.objects[0].y-state.objects[1].y) ** 2))}</Text>
                 <Text>velocity0: {state.objects[0].velocity}</Text>
                 <Text>velocity1: {state.objects[1].velocity}</Text>
@@ -119,7 +117,7 @@ const Simulation = () => {
             <Planet x={state.objects[0].x} y={state.objects[0].y} backgroundColor="pink" radius={MOON_RADIUS} />
 
             <SafeAreaView style={styles.bottom}>
-                <Icon style={styles.bottomIcon} name="play-arrow" onPress={() => {state.paused = !state.paused}} />
+                <Icon style={styles.bottomIcon} name={state.paused? "play-arrow" : "pause"} onPress={() => {state.paused = !state.paused}} />
                 <View style={styles.vline} />
                 <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {if (state.time_multiplier > 1) changeSpeed(state.time_multiplier - 1)}} />
                 <Text style={styles.bottomText}>{state.time_multiplier}x</Text>
@@ -156,11 +154,12 @@ const styles = StyleSheet.create({
     bottomText: {
         marginLeft: 15,
         marginRight: 15,
-        fontFamily: 'Actor'
+        fontFamily: 'Actor',
+        includeFontPadding: false,
     },
     vline: {
         width: 1,
-        backgroundColor: "#555",
+        backgroundColor: "#CCC",
         marginLeft: 15,
         marginRight: 15,
     }
