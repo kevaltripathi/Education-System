@@ -13,39 +13,48 @@ let centerMass = 5.9e24;
 const metres_per_px = 384400000 / 60; // pixels
 
 const App = () => {
-    const [position, setPosition] = useState({
-        x: centerX - 60,
-        y: centerY,
-        velocity: [0, -0.4],
-        mass: 7.3e22,
-    });
-    const distance = Math.sqrt((centerX-position.x) ** 2 + (centerY-position.y) ** 2);
-    const direction = Math.atan2(position.x - centerX, position.y - centerY);
+    const [objects, setObjects] = useState(
+        [
+            {
+                x: centerX - 60,
+                y: centerY,
+                velocity: [0, -0.4],
+                mass: 7.3e22,
+            },
+            {
+                x: centerX,
+                y: centerY,
+                velocity: [0, 0.0],
+                mass: 5.9e24,
+            }
+        ]
+    );
 
     const updateHandler = ({ touches, screen, layout, time }) => {
-        let move = touches.find(x => x.type === "move");
-        if (move) {
-            setPosition({
-                x: position.x + move.delta.pageX,
-                y: position.y + move.delta.pageY,
-                velocity: position.velocity,
-                mass: position.mass,
-            });
-        }
-        else {
-            let force = -G * position.mass * centerMass / (distance * metres_per_px) ** 2;
-            let accel = force / position.mass;
-            let velocity = [
-                position.velocity[0] + accel * Math.sin(direction),
-                position.velocity[1] + accel * Math.cos(direction),
-            ];
-            setPosition({
-                x: position.x + velocity[0],
-                y: position.y + velocity[1],
+        let new_objects = objects.map(object => {
+            x = object.x;
+            y = object.y;
+            velocity = object.velocity;
+            for (object2 of objects) {
+                if (object2 !== object) {
+                    let distance = Math.sqrt((object2.x-object.x) ** 2 + (object2.y-object.y) ** 2);
+                    let direction = Math.atan2(object.x - object2.x, object.y - object2.y);
+                    let force = -G * object.mass * object2.mass / (distance * metres_per_px) ** 2;
+                    let accel = force / object.mass;
+                    velocity = [
+                        velocity[0] + accel * Math.sin(direction),
+                        velocity[1] + accel * Math.cos(direction),
+                    ];
+                }
+            }
+            return {
+                x: object.x + velocity[0],
+                y: object.y + velocity[1],
                 velocity: velocity,
-                mass: position.mass
-            });
-        }
+                mass: object.mass
+            };
+        });
+        setObjects(new_objects);
     };
 
     return (
@@ -53,13 +62,14 @@ const App = () => {
             <SafeAreaView>
                 <Text></Text>
                 <Text></Text>
-                <Text>The Distance between the planets is: {Math.round(distance)}</Text>
-                <Text>velocity: {position.velocity}</Text>
+                <Text>The Distance between the planets is: {Math.round(Math.sqrt((objects[0].x-objects[1].x) ** 2 + (objects[0].y-objects[1].y) ** 2))}</Text>
+                <Text>velocity0: {objects[0].velocity}</Text>
+                <Text>velocity1: {objects[1].velocity}</Text>
             </SafeAreaView>
 
-            <View style={[styles.player, { left: centerX, top: centerY, backgroundColor: "green" }]} />
+            <View style={[styles.player, { left: objects[1].x, top: objects[1].y, backgroundColor: "green" }]} />
 
-            <View style={[styles.player, { left: position.x, top: position.y, backgroundColor: "pink" }]} />
+            <View style={[styles.player, { left: objects[0].x, top: objects[0].y, backgroundColor: "pink" }]} />
         </GameLoop>
     );
 };
