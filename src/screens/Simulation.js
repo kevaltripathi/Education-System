@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {GameEngine} from "react-native-game-engine";
 import {Button, StyleSheet, Dimensions, View, Text, SafeAreaView} from "react-native";
 import {Icon} from "react-native-elements";
 import {Planet} from "../component/Planet";
 import {createPlanet} from "../systems/createPlanet";
+import {OptionCard} from "../component/OptionCard";
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 const metres_per_px = 384400000 / 60;
@@ -41,16 +42,21 @@ const Move = (entities) => {
 }
 
 export const Simulation = () => {
+    const [paused, setPaused] = useState(false);
     return (
         [
-            <GameEngine
+            <GameEngine key={0}
                 systems = {[Move, Gravity, createPlanet]}
                 entities = {[
                     {position: {x: 100, y: 400}, velocity: {x:0, y:-0.5}, mass: 4, renderer: <Planet/>},
                     {position: {x: 150, y: 300}, velocity: {x:0, y:0.5}, mass: 20, renderer: <Planet/>}
-                ]}/>,
-            <SafeAreaView style={styles.bottom}>
-                <Icon style={styles.bottomIcon} name={"pause"} onPress={() => {}} />
+                ]}
+            running={!paused}/>,
+            <OptionCard key={1}/>,
+            <SafeAreaView key={2} style={styles.bottom}>
+                <Icon style={styles.bottomIcon} name={"pause"} onPress={() => {
+                    paused ? setPaused(false) : setPaused(true);
+                }} />
                 <View style={styles.vline} />
                 <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {}} />
                 <Text style={styles.bottomText}>1x</Text>
