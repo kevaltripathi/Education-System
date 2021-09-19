@@ -6,6 +6,7 @@ import {Planet} from "../component/Planet";
 import {createPlanet} from "../systems/createPlanet";
 import {OptionCard} from "../component/OptionCard";
 import {LinearGradient} from "expo-linear-gradient";
+import {absSpeed} from "../util";
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 const metres_per_px = 384400000 / 60;
@@ -63,6 +64,21 @@ const Collide = (entities) => {
     return entities;
 }
 
+const ChangeVars = (entities, {touches}) => {
+    let editingPlanet = entities.find(planet => planet.editing);
+    if (editingPlanet !== undefined) {
+        touches.filter(t => t.type === "move").forEach(t => {
+            let touch_direction = Math.atan2(t.event.pageY - editingPlanet.position.y, t.event.pageX - editingPlanet.position.x);
+            let speed = absSpeed(editingPlanet.velocity);
+            editingPlanet.velocity = {
+                x: speed * Math.cos(touch_direction),
+                y: speed * Math.sin(touch_direction),
+            };
+        });
+    }
+    return entities;
+}
+
 export const Simulation = () => {
     const [paused, setPaused] = useState(false);
     let entities = [
@@ -105,7 +121,7 @@ export const Simulation = () => {
                 }}
             />,
             <GameEngine key={1}
-                        systems={[Move, Gravity, Collide, createPlanet]}
+                        systems={[Move, Gravity, Collide, ChangeVars, createPlanet]}
                         entities={entities}
                         running={!paused}>
                 <View style={styles.container}>
