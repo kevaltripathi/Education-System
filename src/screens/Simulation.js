@@ -5,6 +5,7 @@ import {Icon} from "react-native-elements";
 import {Planet} from "../component/Planet";
 import {createPlanet} from "../systems/createPlanet";
 import {OptionCard} from "../component/OptionCard";
+import {LinearGradient} from "expo-linear-gradient";
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 const metres_per_px = 384400000 / 60;
@@ -97,7 +98,8 @@ export const Simulation = () => {
                         renderer: <Planet />,
                     },
                 ]}
-            running={!paused}/>,
+                running={!paused}
+            />,
             <OptionCard key={1}/>,
             <SafeAreaView key={2} style={styles.bottom}>
                 <Icon style={styles.bottomIcon} name={"pause"} onPress={() => {
@@ -141,5 +143,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#CCC",
         marginLeft: 15,
         marginRight: 15,
-    }
+    },
+    background: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%',
+    },
 });
