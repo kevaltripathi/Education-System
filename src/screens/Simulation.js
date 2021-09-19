@@ -84,15 +84,15 @@ export const Simulation = () => {
     let entities = [
         {
             position: {x: 100, y: 400},
-            velocity: {x: 0, y: -0.5},
+            velocity: {x: 0, y: -0.3},
             mass: 4,
-            radius: 20,
+            radius: 5,
             editing: false,
             renderer: <Planet/>,
         },
         {
-            position: {x: 150, y: 300},
-            velocity: {x: 0, y: 0.5},
+            position: {x: 160, y: 400},
+            velocity: {x: 0, y: 0.3},
             mass: 20,
             radius: 20,
             editing: false,
