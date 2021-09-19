@@ -66,19 +66,20 @@ const Collide = (entities) => {
 export const Simulation = () => {
     const [paused, setPaused] = useState(false);
     return (
-        [            <LinearGradient
-            key={0}
-            colors={["rgba(2,0,36,1)", "#203a93"]}
-            style={styles.background}
-            start={{
-                x: 0.5,
-                y: 0.4,
-            }}
-            end={{
-                x: 1,
-                y: 1,
-            }}
-        />,
+        [
+            <LinearGradient
+                key={0}
+                colors={["rgba(2,0,36,1)", "#203a93"]}
+                style={styles.background}
+                start={{
+                    x: 0.5,
+                    y: 0.4,
+                }}
+                end={{
+                    x: 1,
+                    y: 1,
+                }}
+            />,
             <GameEngine key={1}
                         systems={[Move, Gravity, Collide, createPlanet]}
                         entities={[
@@ -87,6 +88,7 @@ export const Simulation = () => {
                                 velocity: {x: 0, y: -0.5},
                                 mass: 4,
                                 radius: 20,
+                                editing: false,
                                 renderer: <Planet/>,
                             },
                             {
@@ -94,6 +96,7 @@ export const Simulation = () => {
                                 velocity: {x: 0, y: 0.5},
                                 mass: 20,
                                 radius: 20,
+                                editing: false,
                                 renderer: <Planet/>,
                             },
                         ]}

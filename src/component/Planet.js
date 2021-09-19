@@ -6,17 +6,20 @@ const rndInt = Math.floor(Math.random() * 4)
 const planets = {0: require("./../../assets/img/planet-01.png"), 1: require("./../../assets/img/planet-08.png"), 2: require("./../../assets/img/planet-12.png"), 3: require("./../../assets/img/planet-13.png")}
 
 const Planet = (props) => {
-    const {position, velocity, radius} = props;
+    const {position, velocity, radius, editing} = props;
     const arrow_tip = {x: position.x + velocity.x * 100, y: position.y + velocity.y * 100};
-    return (
-        [
+    elements = [
             <Image key="0" source={planets[rndInt]} style={[styles.planet, {
                 left: (position.x - radius),
                 top: (position.y - radius),
                 borderRadius: radius * 2,
+                borderColor: editing ? "#26c6da" : "#ccc",
                 width: radius * 2,
                 height: radius * 2,
-            }]}/>,
+            }]}/>
+    ]
+    if (editing) {
+        elements.push(
             <Svg
                 key="1"
                 height="1000"
@@ -38,13 +41,13 @@ const Planet = (props) => {
                     strokeWidth="10"
                 />
             </Svg>
-        ]
-    );
+        );
+    }
+    return elements;
 };
 
 const styles = StyleSheet.create({
     planet: {
-        borderColor: "#CCC",
         borderWidth: 4,
         position: "absolute"
     }
