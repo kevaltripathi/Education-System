@@ -1,5 +1,5 @@
 import {Planet} from "../component/Planet";
-import {planetContains} from "../util";
+import {planetContains, absSpeed} from "../util";
 import React from "react";
 
 export const createPlanet = (entities, {touches}) => {
@@ -23,6 +23,8 @@ export const createPlanet = (entities, {touches}) => {
                     entity.editing = false;
                 }
             })
+            entities.optionCard.mass = containingPlanet.mass;
+            entities.optionCard.velocity = absSpeed(containingPlanet.velocity);
         }
     });
     return entities;

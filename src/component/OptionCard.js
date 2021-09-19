@@ -2,9 +2,8 @@ import React, {useState} from "react";
 import {StyleSheet, Text, View} from "react-native";
 import { Slider } from 'react-native-elements';
 
-const OptionCard = () => {
-    const [mass, setMass] = useState(0);
-    const [velocity, setVelocity] = useState(0);
+const OptionCard = (props) => {
+    const {mass, velocity} = props;
     return (
         <View style={styles.card}>
             <View style={styles.outer}>
@@ -13,7 +12,7 @@ const OptionCard = () => {
                     <Slider
                         style={{margin: -5}}
                         value={mass}
-                        onValueChange={value => setMass(value)}
+                        onValueChange={value => {}}
                         thumbStyle={{ height: 10, width: 10, backgroundColor: 'green' }}
                         step={1}
                         minimumValue={0}
@@ -25,7 +24,7 @@ const OptionCard = () => {
                     <Slider
                         style={{margin: -5}}
                         value={velocity}
-                        onValueChange={value => setVelocity(value)}
+                        onValueChange={value => {}}
                         thumbStyle={{ height: 10, width: 10, backgroundColor: 'orange' }}
                         step={1}
                         minimumValue={0}
@@ -39,6 +38,8 @@ const OptionCard = () => {
 
 const styles = StyleSheet.create({
     card: {
+        position: "absolute",
+        bottom: 0,
         width: "100%",
         borderBottomWidth: 1,
         paddingTop: 10,

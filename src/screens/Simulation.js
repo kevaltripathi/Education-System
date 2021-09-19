@@ -65,6 +65,30 @@ const Collide = (entities) => {
 
 export const Simulation = () => {
     const [paused, setPaused] = useState(false);
+    let entities = [
+        {
+            position: {x: 100, y: 400},
+            velocity: {x: 0, y: -0.5},
+            mass: 4,
+            radius: 20,
+            editing: false,
+            renderer: <Planet/>,
+        },
+        {
+            position: {x: 150, y: 300},
+            velocity: {x: 0, y: 0.5},
+            mass: 20,
+            radius: 20,
+            editing: false,
+            renderer: <Planet/>,
+        },
+    ];
+    entities.optionCard = ( {
+        mass: 0,
+        velocity: 0,
+        renderer: <OptionCard style={styles.bottom} />
+    } );
+
     return (
         [
             <LinearGradient
@@ -82,40 +106,22 @@ export const Simulation = () => {
             />,
             <GameEngine key={1}
                         systems={[Move, Gravity, Collide, createPlanet]}
-                        entities={[
-                            {
-                                position: {x: 100, y: 400},
-                                velocity: {x: 0, y: -0.5},
-                                mass: 4,
-                                radius: 20,
-                                editing: false,
-                                renderer: <Planet/>,
-                            },
-                            {
-                                position: {x: 150, y: 300},
-                                velocity: {x: 0, y: 0.5},
-                                mass: 20,
-                                radius: 20,
-                                editing: false,
-                                renderer: <Planet/>,
-                            },
-                        ]}
+                        entities={entities}
                         running={!paused}>
                 <View style={styles.container}>
-                    <View style={styles.bottom}>
-                        <Icon style={styles.bottomIcon} name={paused ? "play-arrow" : "pause"} onPress={() => {
+                    <View style={styles.top}>
+                        <Icon style={styles.topIcon} name={paused ? "play-arrow" : "pause"} onPress={() => {
                             paused ? setPaused(false) : setPaused(true);
                         }}/>
                         <View style={styles.vline}/>
-                        <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {
+                        <Icon style={styles.topIcon} name="fast-rewind" onPress={() => {
                         }}/>
-                        <Text style={styles.bottomText}>1x</Text>
-                        <Icon style={styles.bottomIcon} name="fast-forward" onPress={() => {
+                        <Text style={styles.topText}>1x</Text>
+                        <Icon style={styles.topIcon} name="fast-forward" onPress={() => {
                         }}/>
                     </View>
                 </View>
             </GameEngine>,
-            <OptionCard key={2}/>
         ]
     );
 };
@@ -123,15 +129,18 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#000"
     },
-    bottom: {
+    top: {
         backgroundColor: "#FFF",
         width: WIDTH,
         flexDirection: "row",
         padding: 10,
         alignItems: "center"
-
     },
-    bottomText: {
+    bottom: {
+        position: "absolute",
+        bottom: 0,
+    },
+    topText: {
         marginLeft: 15,
         marginRight: 15,
         includeFontPadding: false
