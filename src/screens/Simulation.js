@@ -51,6 +51,7 @@ const Move = (entities) => {
 export const Simulation = () => {
     return [
         <LinearGradient
+            key="bg"
             colors={["rgba(2,0,36,1)", "#203a93"]}
             style={styles.background}
             start={{
