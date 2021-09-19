@@ -48,6 +48,27 @@ const Move = (entities) => {
     return entities;
 };
 
+const Collide = (entities) => {
+    entities.forEach((entity) => {
+        const x1 = entity.position.x;
+        const y1 = entity.position.y;
+        entities.forEach((entity2, index) => {
+            const x2 = entity2.position.x;
+            const y2 = entity2.position.y;
+            if (entity2 !== entity) {
+                let distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                if (distance < entity.radius + entity2.radius - 5) {
+                    // combine both entities into one
+                    entity.mass += entity2.mass;
+                    entity.radius += 2;
+                    entities.splice(index, 1); // remove entity2
+                }
+            }
+        });
+    });
+    return entities;
+}
+
 export const Simulation = () => {
     return [
         <LinearGradient
@@ -65,18 +86,20 @@ export const Simulation = () => {
         />,
         <GameEngine
             key="engine"
-            systems={[Move, Gravity, createPlanet]}
+            systems={[Move, Gravity, Collide, createPlanet]}
             entities={[
                 {
                     position: { x: 100, y: 400 },
                     velocity: { x: 0, y: -0.5 },
                     mass: 4,
+                    radius: 20,
                     renderer: <Planet />,
                 },
                 {
                     position: { x: 150, y: 300 },
                     velocity: { x: 0, y: 0.5 },
                     mass: 20,
+                    radius: 20,
                     renderer: <Planet />,
                 },
             ]}
