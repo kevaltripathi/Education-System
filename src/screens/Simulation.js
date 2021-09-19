@@ -131,7 +131,7 @@ const Simulation = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFF"
+        backgroundColor: "#000"
     },
     player: {
         position: "absolute",
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
         borderRadius: RADIUS * 2
     },
     bottom: {
+        backgroundColor: "#FFF",
         position: "absolute",
         width: WIDTH,
         display: "flex",
@@ -152,6 +153,7 @@ const styles = StyleSheet.create({
         width: 30,
     },
     bottomText: {
+        marginTop: 5,
         marginLeft: 15,
         marginRight: 15,
         fontFamily: 'Actor',
