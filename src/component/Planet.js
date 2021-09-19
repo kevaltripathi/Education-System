@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     planet: {
         borderColor: "#CCC",
         borderWidth: 4,
-        backgroundColor: "pink",
         position: "absolute"
     }
 });
