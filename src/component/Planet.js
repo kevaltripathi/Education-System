@@ -1,12 +1,12 @@
 import React from "react";
-import {StyleSheet, View} from "react-native";
+import {Image, StyleSheet, View} from "react-native";
 
 const RADIUS = 20;
 
 const Planet = (props) => {
     const {position} = props;
     return (
-        <View style={[styles.planet, {left: (position.x - RADIUS), top: (position.y - RADIUS)}]}/>
+        <Image source={require('./../../assets/img/planet-08.png')} style={[styles.planet, {left: (position.x - RADIUS), top: (position.y - RADIUS)}]}/>
     );
 };
 

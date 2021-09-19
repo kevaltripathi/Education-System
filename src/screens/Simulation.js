@@ -1,6 +1,7 @@
 import React from 'react';
 import {GameEngine} from "react-native-game-engine";
 import {Planet} from "../component/Planet";
+import {createPlanet} from "../systems/createPlanet";
 
 const metres_per_px = 384400000 / 60;
 const initial_time_multiplier = 10;
@@ -35,14 +36,6 @@ const Move = (entities) => {
     })
     return entities;
 }
-
-const createPlanet = (entities, {touches}) => {
-    touches.filter(t => t.type === "press").forEach(t => {
-        const position = {x: t.event.pageX, y: t.event.pageY};
-        entities[entities.length] = {position: position, velocity: {x:0, y:0}, mass:20, renderer: <Planet />};
-    });
-    return entities;
-};
 
 export const Simulation = () => {
     return (
