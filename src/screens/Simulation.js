@@ -66,89 +66,85 @@ const Collide = (entities) => {
 export const Simulation = () => {
     const [paused, setPaused] = useState(false);
     return (
-        [
-            <LinearGradient
-                key={3}
-                colors={["rgba(2,0,36,1)", "#203a93"]}
-                style={styles.background}
-                start={{
-                    x: 0.5,
-                    y: 0.4,
-                }}
-                end={{
-                    x: 1,
-                    y: 1,
-                }}
-            />,
-            <GameEngine key={0}
-                systems = {[Move, Gravity, Collide, createPlanet]}
-                entities={[
-                    {
-                        position: { x: 100, y: 400 },
-                        velocity: { x: 0, y: -0.5 },
-                        mass: 4,
-                        radius: 20,
-                        renderer: <Planet />,
-                    },
-                    {
-                        position: { x: 150, y: 300 },
-                        velocity: { x: 0, y: 0.5 },
-                        mass: 20,
-                        radius: 20,
-                        renderer: <Planet />,
-                    },
-                ]}
-                running={!paused}
-            />,
-            <OptionCard key={1}/>,
-            <SafeAreaView key={2} style={styles.bottom}>
-                <Icon style={styles.bottomIcon} name={paused? "play-arrow" : "pause"} onPress={() => {
-                    paused ? setPaused(false) : setPaused(true);
-                }} />
-                <View style={styles.vline} />
-                <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {}} />
-                <Text style={styles.bottomText}>1x</Text>
-                <Icon style={styles.bottomIcon} name="fast-forward" onPress={() => {}} />
-            </SafeAreaView>
+        [            <LinearGradient
+            key={0}
+            colors={["rgba(2,0,36,1)", "#203a93"]}
+            style={styles.background}
+            start={{
+                x: 0.5,
+                y: 0.4,
+            }}
+            end={{
+                x: 1,
+                y: 1,
+            }}
+        />,
+            <GameEngine key={1}
+                        systems={[Move, Gravity, Collide, createPlanet]}
+                        entities={[
+                            {
+                                position: {x: 100, y: 400},
+                                velocity: {x: 0, y: -0.5},
+                                mass: 4,
+                                radius: 20,
+                                renderer: <Planet/>,
+                            },
+                            {
+                                position: {x: 150, y: 300},
+                                velocity: {x: 0, y: 0.5},
+                                mass: 20,
+                                radius: 20,
+                                renderer: <Planet/>,
+                            },
+                        ]}
+                        running={!paused}>
+                <View style={styles.container}>
+                    <View style={styles.bottom}>
+                        <Icon style={styles.bottomIcon} name={paused ? "play-arrow" : "pause"} onPress={() => {
+                            paused ? setPaused(false) : setPaused(true);
+                        }}/>
+                        <View style={styles.vline}/>
+                        <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {
+                        }}/>
+                        <Text style={styles.bottomText}>1x</Text>
+                        <Icon style={styles.bottomIcon} name="fast-forward" onPress={() => {
+                        }}/>
+                    </View>
+                </View>
+            </GameEngine>,
+            <OptionCard key={2}/>
         ]
     );
 };
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: "#000"
     },
     bottom: {
         backgroundColor: "#FFF",
-        position: "absolute",
         width: WIDTH,
-        display: "flex",
         flexDirection: "row",
-        bottom: 0,
         padding: 10,
-    },
-    bottomIcon: {
-        height: 30,
-        width: 30,
+        alignItems: "center"
+
     },
     bottomText: {
-        marginTop: 5,
         marginLeft: 15,
         marginRight: 15,
-        includeFontPadding: false,
+        includeFontPadding: false
     },
     vline: {
-        width: 1,
         backgroundColor: "#CCC",
+        borderWidth: 0.5,
+        height: "100%",
         marginLeft: 15,
-        marginRight: 15,
+        marginRight: 15
     },
     background: {
         position: "absolute",
         left: 0,
         right: 0,
         top: 0,
-        height: '100%',
-    },
+        height: '100%'
+    }
 });

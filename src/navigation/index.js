@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 
 export const RootNavigator = () => (
     <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}} >
+        <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}} >
             <Stack.Screen name="Title" component={Title}/>
             <Stack.Screen name="Simulation" component={Simulation}/>
         </Stack.Navigator>
