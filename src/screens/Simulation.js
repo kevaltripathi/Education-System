@@ -17,7 +17,7 @@ const Gravity = (entities) => {
             if(entity2 !== entity) {
                 let distance = Math.sqrt((x2-x1) ** 2 + (y2-y1) ** 2);
                 let direction = Math.atan2(x1 - x2, y1 - y2);
-                let force = entity.mass * entity2.mass / (distance) ** 2;
+                let force = -1 * entity.mass * entity2.mass / (distance) ** 2;
                 let accel = force / entity.mass;
                 entity.velocity.x += accel * Math.sin(direction);
                 entity.velocity.y += accel * Math.cos(direction);
