@@ -102,7 +102,7 @@ export const Simulation = () => {
             />,
             <OptionCard key={1}/>,
             <SafeAreaView key={2} style={styles.bottom}>
-                <Icon style={styles.bottomIcon} name={"pause"} onPress={() => {
+                <Icon style={styles.bottomIcon} name={paused? "play-arrow" : "pause"} onPress={() => {
                     paused ? setPaused(false) : setPaused(true);
                 }} />
                 <View style={styles.vline} />
