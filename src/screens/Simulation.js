@@ -1,170 +1,56 @@
-import React, {useState} from "react";
-import {Button, StyleSheet, Dimensions, View, Text, SafeAreaView} from "react-native";
-import {Icon} from "react-native-elements";
-import {GameLoop} from "react-native-game-engine";
-import {Planet} from "../components/Planet";
+import React from 'react';
+import {GameEngine} from "react-native-game-engine";
+import {Planet} from "../component/Planet";
 
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
-const RADIUS = 25;
-
-const centerX = WIDTH / 2 - RADIUS;
-const centerY = HEIGHT / 2 - RADIUS;
-
-const G = 6.67e-11;
-let centerMass = 5.9e24;
 const metres_per_px = 384400000 / 60;
-
 const initial_time_multiplier = 10;
+const G = 6.67e-11;
 
-const EARTH_RADIUS = 6357000 / metres_per_px * 10;
-const MOON_RADIUS = 1737000 / metres_per_px * 10; // multiplying by 10 so you can actually see them. this is not to scale.
-
-const Simulation = () => {
-    const [state, setState] = useState({
-        x_offset: 0,
-        y_offset: 0,
-        time_multiplier: initial_time_multiplier,
-        paused: false,
-        objects: [
-            {
-                x: centerX - 60,
-                y: centerY,
-                mass: 7.3e22,
-                velocity: [0, -0.4 * initial_time_multiplier],
-            },
-            {
-                x: centerX,
-                y: centerY,
-                mass: 5.9e24,
-                velocity: [0, 0.0 * initial_time_multiplier],
+const Gravity = (entities) => {
+    entities.forEach(entity => {
+        const x1 = entity.position.x;
+        const y1 = entity.position.y;
+        entities.forEach((entity2) => {
+            const x2 = entity2.position.x;
+            const y2 = entity2.position.y;
+            if(entity2 !== entity) {
+                let distance = Math.sqrt((x2-x1) ** 2 + (y2-y1) ** 2);
+                let direction = Math.atan2(x1 - x2, y1 - y2);
+                let force = entity.mass * entity2.mass / (distance) ** 2;
+                let accel = force / entity.mass;
+                entity.velocity.x += accel * Math.sin(direction);
+                entity.velocity.y += accel * Math.cos(direction);
             }
-        ]
-    });
-
-    const updateHandler = ({ touches, screen, layout, time }) => {
-        let move = touches.find(x => x.type === "move");
-        let x_offset = 0;
-        let y_offset = 0;
-        if (move) {
-            x_offset = move.delta.pageX,
-            y_offset = move.delta.pageY;
-        }
-
-        new_objects = state.objects.map(object => {
-            x = object.x;
-            y = object.y;
-            velocity = object.velocity;
-            if (!state.paused) {
-                for (object2 of state.objects) {
-                    if (object2 !== object) {
-                        let distance = Math.sqrt((object2.x-object.x) ** 2 + (object2.y-object.y) ** 2);
-                        let direction = Math.atan2(object.x - object2.x, object.y - object2.y);
-                        let force = -G * object.mass * object2.mass / (distance * metres_per_px) ** 2;
-                        let accel = force / object.mass * state.time_multiplier ** 2;
-                        velocity = [
-                            velocity[0] + accel * Math.sin(direction),
-                            velocity[1] + accel * Math.cos(direction),
-                        ];
-                    }
-                }
-                return {
-                    x: x_offset + object.x + velocity[0],
-                    y: y_offset + object.y + velocity[1],
-                    velocity: velocity,
-                    mass: object.mass
-                };
-            } else {
-                return {
-                    x: x_offset + object.x,
-                    y: y_offset + object.y,
-                    velocity: velocity,
-                    mass: object.mass
-                };
-            }
-        });
-        setState({
-            x_offset: x_offset,
-            y_offset: y_offset,
-            time_multiplier: state.time_multiplier,
-            paused: state.paused,
-            objects: new_objects,
-        });
-    };
-
-    const changeSpeed = (new_speed) => {
-        setState({
-            x_offset: state.x_offset,
-            y_offset: state.y_offset,
-            time_multiplier: new_speed,
-            objects: state.objects.map(object => {return {
-                x: object.x,
-                y: object.y,
-                mass: object.mass,
-                velocity: object.velocity.map(component => (component / state.time_multiplier * new_speed)),
-            }})
         })
-    };
+    })
+    return entities;
+}
 
-    return (
-        <GameLoop style={styles.container} onUpdate={updateHandler}>
-            <SafeAreaView>
-                <Text>The Distance between the planets is: {Math.round(Math.sqrt((state.objects[0].x-state.objects[1].x) ** 2 + (state.objects[0].y-state.objects[1].y) ** 2))}</Text>
-                <Text>velocity0: {state.objects[0].velocity}</Text>
-                <Text>velocity1: {state.objects[1].velocity}</Text>
-            </SafeAreaView>
+const Move = (entities) => {
+    entities.forEach((entity) => {
+        if(entity.velocity) {
+            entity.position.x += (entity.velocity.x);
+            entity.position.y += (entity.velocity.y);
+        }
+    })
+    return entities;
+}
 
-            <Planet x={state.objects[1].x} y={state.objects[1].y} backgroundColor="green" radius={EARTH_RADIUS} />
-            <Planet x={state.objects[0].x} y={state.objects[0].y} backgroundColor="pink" radius={MOON_RADIUS} />
-
-            <SafeAreaView style={styles.bottom}>
-                <Icon style={styles.bottomIcon} name={state.paused? "play-arrow" : "pause"} onPress={() => {state.paused = !state.paused}} />
-                <View style={styles.vline} />
-                <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {if (state.time_multiplier > 1) changeSpeed(state.time_multiplier - 1)}} />
-                <Text style={styles.bottomText}>{state.time_multiplier}x</Text>
-                <Icon style={styles.bottomIcon} name="fast-forward" onPress={() => {changeSpeed(state.time_multiplier + 1)}} />
-            </SafeAreaView>
-        </GameLoop>
-    );
+const createPlanet = (entities, {touches}) => {
+    touches.filter(t => t.type === "press").forEach(t => {
+        const position = {x: t.event.pageX, y: t.event.pageY};
+        entities[entities.length] = {position: position, velocity: {x:0, y:0}, mass:20, renderer: <Planet />};
+    });
+    return entities;
 };
 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#000"
-    },
-    player: {
-        position: "absolute",
-        width: RADIUS * 2,
-        height: RADIUS * 2,
-        borderRadius: RADIUS * 2
-    },
-    bottom: {
-        backgroundColor: "#FFF",
-        position: "absolute",
-        width: WIDTH,
-        display: "flex",
-        flexDirection: "row",
-        bottom: 0,
-        padding: 10,
-    },
-    bottomIcon: {
-        height: 30,
-        width: 30,
-    },
-    bottomText: {
-        marginTop: 5,
-        marginLeft: 15,
-        marginRight: 15,
-        fontFamily: 'Actor',
-        includeFontPadding: false,
-    },
-    vline: {
-        width: 1,
-        backgroundColor: "#CCC",
-        marginLeft: 15,
-        marginRight: 15,
-    }
-});
-
-export {Simulation};
+export const Simulation = () => {
+    return (
+        <GameEngine
+            systems = {[Move, Gravity, createPlanet]}
+            entities = {[
+                {position: {x: 100, y: 100}, velocity: {x:0, y:-1}, mass: 4, renderer: <Planet/>},
+                {position: {x: 300, y: 300}, velocity: {x:0, y:1}, mass: 20, renderer: <Planet/>}
+            ]}/>
+    );
+};

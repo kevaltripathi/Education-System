@@ -1,16 +1,18 @@
-import * as React from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {Blank} from '../screens/Blank';
+import {createStackNavigator} from '@react-navigation/stack';
+import {Title} from '../screens/Title';
 import {Simulation} from "../screens/Simulation";
+import {StatusBar} from "react-native";
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 export const RootNavigator = () => (
     <NavigationContainer>
-        <Drawer.Navigator>
-            <Drawer.Screen name="Home" component={Blank}/>
-            <Drawer.Screen name="Simulation" component={Simulation}/>
-        </Drawer.Navigator>
+        <Stack.Navigator screenOptions={{headerShown: false}} >
+            <Stack.Screen name="Title" component={Title}/>
+            <Stack.Screen name="Simulation" component={Simulation}/>
+        </Stack.Navigator>
+        <StatusBar hidden />
     </NavigationContainer>
 );

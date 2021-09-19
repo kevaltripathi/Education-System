@@ -1,21 +1,19 @@
-import React, { PureComponent } from "react";
-import { StyleSheet, View } from "react-native";
+import React from "react";
+import {StyleSheet, View} from "react-native";
 
 const RADIUS = 20;
 
-class Planet extends PureComponent {
-    render() {
-        return (
-            <View style={[styles.planet, {
-                left: this.props.x - this.props.radius / 2,
-                top: this.props.y - this.props.radius / 2,
-                backgroundColor: this.props.backgroundColor,
-                width: this.props.radius * 2,
-                height: this.props.radius * 2,
-                borderRadius: this.props.radius * 2,
-            }]} />
-        );
-    }
+const Planet = (props) => {
+    return (
+        <View style={[styles.planet, {
+            left: props.x - props.radius / 2,
+            top: props.y - props.radius / 2,
+            backgroundColor: props.backgroundColor,
+            width: props.radius * 2,
+            height: props.radius * 2,
+            borderRadius: props.radius * 2,
+        }]}/>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -24,4 +22,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export { Planet };
+export {Planet};
