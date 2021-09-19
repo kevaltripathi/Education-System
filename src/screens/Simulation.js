@@ -44,12 +44,13 @@ export const Simulation = () => {
     return (
         [
             <GameEngine
+                key = "engine"
                 systems = {[Move, Gravity, createPlanet]}
                 entities = {[
                     {position: {x: 100, y: 400}, velocity: {x:0, y:-0.5}, mass: 4, renderer: <Planet/>},
                     {position: {x: 150, y: 300}, velocity: {x:0, y:0.5}, mass: 20, renderer: <Planet/>}
                 ]}/>,
-            <SafeAreaView style={styles.bottom}>
+            <SafeAreaView style={styles.bottom} key="bottom">
                 <Icon style={styles.bottomIcon} name={"pause"} onPress={() => {}} />
                 <View style={styles.vline} />
                 <Icon style={styles.bottomIcon} name="fast-rewind" onPress={() => {}} />
